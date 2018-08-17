@@ -3,11 +3,8 @@ NUMERICAL INPUT
 ## Supported formats
 ```javascript
 [
-    "integer",
-    "positive_integer",
-    "decimal",
-    "positive_decimal",
-    "decimal_2places"
+    "integer": ["all", "positive"]
+    "decimal": ["all", "positive", "limited decimal places"]
 ]
 ```
 ## Basic Usage
@@ -32,7 +29,7 @@ export class Form extends React.Component {
     render() {        
         return (
             <form >
-                <Numeric format={"decimal"} value={this.state.input} onChange={this.handleInputChange}/>
+                <Numeric format={"decimal"} positive={true}  decimalPlaces={4} value={this.state.input} onChange={this.handleInputChange}/>
             </form>
         );
     }

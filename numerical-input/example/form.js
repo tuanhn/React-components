@@ -88,7 +88,7 @@ export class Form extends React.Component {
                 <br />      
                 <div>
                     <div>Decimal with 4 places </div>
-                    <Numeric format={"decimal"} decimalPlaces={4} value={this.state.input5} onChange={this.handleInputChange5}/>
+                    <Numeric format={"decimal"}  positive={true}  decimalPlaces={4} value={this.state.input5} onChange={this.handleInputChange5}/>
                     <label> Value: {this.state.input5}</label>
                 </div>      
             </form>
