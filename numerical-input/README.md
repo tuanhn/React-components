@@ -22,8 +22,8 @@ export class Form extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }   
 
-    handleInputChange(value){
-        this.setState({input: value});
+    handleInputChange(data){
+        this.setState({input: data.value});
     }
 
     render() {        
