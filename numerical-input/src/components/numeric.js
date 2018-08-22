@@ -1,7 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './numeric.css';
 
-const DEFAULT_FORMAT = "decimal";
 const FORMATS = {
     "integer": {
         "all": /^(0|-?([1-9]\d*)?)$/,
@@ -31,15 +31,20 @@ export class Numeric extends React.Component {
         this.handleChange  = this.handleChange.bind(this);
     }   
 
-    componentWillReceiveProps(newProps) {    
-        var isValid = this.state.regex.test(newProps.value);
-        this.setState({isValid: isValid});        
-    }
+    static getDerivedStateFromProps(nextProps, prevState) {        
+        var isValid = prevState.regex.test(nextProps.value);
+        return {
+            isValid: isValid
+        };
+    }   
+
+    shouldComponentUpdate(nextProps) {
+        return (this.props.value !== nextProps.value);
+    }    
 
     handleChange (e){
         if (e.target.value == '' || this.state.regex.test(e.target.value)) {
             this.callPropOnChange(true, e.target.value);            
-            this.setState({isValid: true});
         }        
     }   
 
@@ -53,28 +58,44 @@ export class Numeric extends React.Component {
     }
     
     getFormat(format, positive, decimalPlaces){
-        if(format && decimalPlaces){
+        var type = positive ? "positive" : "all";
+        if(decimalPlaces){
             var places = Array(decimalPlaces).fill('[\\d]?').join('');          
-            var type = positive ? "positive" : "all";
             var regexFormat = FORMATS["decimal2Places"][type].replace('[\\d]?[\\d]?', places);
             return new RegExp(regexFormat);
         }
-        else if(format){
-            var type = positive ? "positive" : "all";
+        else {
             return FORMATS[format][type];
-        }
-        else{
-            return FORMATS[DEFAULT_FORMAT]["all"];
-        }
+        }        
     }
 
     render() {        
         return (
             <input 
                 title={this.state.isValid ? '' : 'Invalid data'} 
-                className={this.state.isValid ? '' : 'invalid'} 
+                className={(this.props.className ? this.props.className : '')  + (this.state.isValid ? '' : ' invalid')} 
                 value={this.props.value} 
                 onChange={this.handleChange }></input>
         );
     }
 }
+
+Numeric.defaultProps = {
+    className: '',
+    format: 'decimal',
+    positive: false,
+    decimalPlaces: null,
+    value: ''
+};
+
+Numeric.propTypes = {
+    className: PropTypes.string,
+    format: PropTypes.string,
+    positive: PropTypes.bool, 
+    decimalPlaces: PropTypes.number,
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]),
+    onChange: PropTypes.func
+};
